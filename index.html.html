@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Goals 2026</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:#f5f5f5;
+    color:#222;
+    padding:32px 20px 80px;
+}
+
+.container{
+    max-width:900px;
+    margin:0 auto;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-bottom:30px;
+}
+
+h1{
+    font-size:3rem;
+    font-weight:800;
+}
+
+.year{
+    color:#888;
+    font-weight:600;
+}
+
+.controls{
+    display:flex;
+    gap:10px;
+}
+
+button{
+    border:none;
+    border-radius:8px;
+    padding:10px 16px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+#exportBtn{
+    background:#d9d9d9;
+}
+
+#resetBtn{
+    background:#111;
+    color:white;
+}
+
+.month-header{
+    display:grid;
+    grid-template-columns:repeat(12,52px);
+    gap:8px;
+    margin-bottom:25px;
+}
+
+.month-header div{
+    text-align:center;
+    color:#666;
+    font-size:14px;
+}
+
+.section{
+    margin-bottom:45px;
+}
+
+.section-title{
+    text-transform:uppercase;
+    letter-spacing:2px;
+    font-size:14px;
+    font-weight:800;
+    color:#666;
+    margin-bottom:12px;
+}
+
+.goal{
+    margin-bottom:24px;
+}
+
+.goal-name{
+    font-size:18px;
+    margin-bottom:10px;
+}
+
+.boxes{
+    display:grid;
+    grid-template-columns:repeat(12,52px);
+    gap:8px;
+}
+
+.box{
+    width:52px;
+    height:52px;
+    background:#ececec;
+    border:1px solid #d6d6d6;
+    border-radius:4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:22px;
+    transition:.15s;
+    user-select:none;
+}
+
+.box:hover{
+    transform:scale(1.03);
+}
+
+.box.success{
+    background:#22c55e;
+    border-color:#22c55e;
+    color:white;
+}
+
+.box.fail{
+    background:#ef4444;
+    border-color:#ef4444;
+    color:white;
+}
+
+.stats{
+    margin-top:40px;
+    font-size:15px;
+    color:#555;
+    font-weight:600;
+}
+
+@media(max-width:900px){
+
+    .goal{
+        overflow-x:auto;
+        padding-bottom:8px;
+    }
+
+    .boxes{
+        width:max-content;
+    }
+
+    .month-header{
+        width:max-content;
+    }
+
+    h1{
+        font-size:2.3rem;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>My Goals <span class="year">2026</span></h1>
+
+        <div class="controls">
+            <button id="exportBtn">Export</button>
+            <button id="resetBtn">Reset</button>
+        </div>
+    </div>
+
+    <div class="month-header">
+        <div>J</div><div>F</div><div>M</div><div>A</div>
+        <div>M</div><div>J</div><div>J</div><div>A</div>
+        <div>S</div><div>O</div><div>N</div><div>D</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Career/Passion</div>
+
+        <div class="goal">
+            <div class="goal-name">Apply for 1 Christmas job per day</div>
+            <div class="boxes"></div>
+        </div>
+
+        <div class="goal">
+            <div class="goal-name">Upload 1 video per month</div>
+            <div class="boxes"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Deen</div>
+
+        <div class="goal">
+            <div class="goal-name">Wake up for Fajr everyday</div>
+            <div class="boxes"></div>
+        </div>
+
+        <div class="goal">
+            <div class="goal-name">Read the Full Quran Translation</div>
+            <div class="boxes"></div>
+        </div>
+
+        <div class="goal">
+            <div class="goal-name">Build a well</div>
+            <div class="boxes"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Physical Health</div>
+
+        <div class="goal">
+            <div class="goal-name">Lift 3 times a week</div>
+            <div class="boxes"></div>
+        </div>
+
+        <div class="goal">
+            <div class="goal-name">Run 1 time per week</div>
+            <div class="boxes"></div>
+        </div>
+
+        <div class="goal">
+            <div class="goal-name">Drink 2 bottles of water a day</div>
+            <div class="boxes"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Social Health</div>
+
+        <div class="goal">
+            <div class="goal-name">Complete 3 CHOC lessons per week</div>
+            <div class="boxes"></div>
+        </div>
+
+        <div class="goal">
+            <div class="goal-name">Learn storytelling</div>
+            <div class="boxes"></div>
+        </div>
+
+        <div class="goal">
+            <div class="goal-name">Practice dance 3 times per week</div>
+            <div class="boxes"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Financial</div>
+
+        <div class="goal">
+            <div class="goal-name">Save up $3k per month</div>
+            <div class="boxes"></div>
+        </div>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+</div>
+
+<script>
+
+const STORAGE_KEY = "goalTracker2026";
+
+const savedData =
+JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+const rows =
+document.querySelectorAll(".boxes");
+
+rows.forEach((row,rowIndex)=>{
+
+    for(let monthIndex=0; monthIndex<12; monthIndex++){
+
+        const box = document.createElement("div");
+        box.className = "box";
+
+        const savedState =
+            savedData[rowIndex]?.[monthIndex] || "blank";
+
+        box.dataset.state = savedState;
+
+        if(savedState === "success"){
+            box.classList.add("success");
+            box.textContent = "✓";
+        }
+        else if(savedState === "fail"){
+            box.classList.add("fail");
+            box.textContent = "✕";
+        }
+        else{
+            box.textContent = "·";
+        }
+
+        box.addEventListener("click",()=>{
+
+            const state = box.dataset.state;
+
+            if(state === "blank"){
+
+                box.dataset.state = "success";
+                box.classList.remove("fail");
+                box.classList.add("success");
+                box.textContent = "✓";
+
+            }
+            else if(state === "success"){
+
+                box.dataset.state = "fail";
+                box.classList.remove("success");
+                box.classList.add("fail");
+                box.textContent = "✕";
+
+            }
+            else{
+
+                box.dataset.state = "blank";
+                box.classList.remove("success","fail");
+                box.textContent = "·";
+
+            }
+
+            saveData();
+            updateStats();
+
+        });
+
+        row.appendChild(box);
+    }
+});
+
+function saveData(){
+
+    const data = [];
+
+    document.querySelectorAll(".boxes").forEach(row=>{
+
+        const rowData = [];
+
+        row.querySelectorAll(".box").forEach(box=>{
+
+            rowData.push(box.dataset.state);
+
+        });
+
+        data.push(rowData);
+
+    });
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(data)
+    );
+}
+
+function updateStats(){
+
+    const total =
+    document.querySelectorAll(".box").length;
+
+    const success =
+    document.querySelectorAll(".box.success").length;
+
+    const fail =
+    document.querySelectorAll(".box.fail").length;
+
+    const pending =
+    total - success - fail;
+
+    document.getElementById("stats").textContent =
+        `✅ ${success} completed | ❌ ${fail} missed | ⏳ ${pending} pending`;
+}
+
+document.getElementById("resetBtn")
+.addEventListener("click",()=>{
+
+    if(confirm("Delete all saved progress?")){
+
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+
+    }
+});
+
+document.getElementById("exportBtn")
+.addEventListener("click",()=>{
+
+    const data =
+    localStorage.getItem(STORAGE_KEY) || "[]";
+
+    const blob =
+    new Blob([data],{
+        type:"application/json"
+    });
+
+    const link =
+    document.createElement("a");
+
+    link.href =
+    URL.createObjectURL(blob);
+
+    link.download =
+    "goals_tracker_backup.json";
+
+    link.click();
+});
+
+updateStats();
+
+</script>
+
+</body>
+</html>
