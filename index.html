@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goals Tracker</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:#f5f5f5;
+    color:#222;
+    overflow-x:hidden;
+}
+
+.app-container{
+    position:relative;
+    min-height:100vh;
+}
+
+.page{
+    display:none;
+    min-height:100vh;
+    padding:32px 20px 80px;
+}
+
+.page.active{
+    display:block;
+}
+.container{
+    max-width:1000px;
+    margin:0 auto;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-bottom:30px;
+}
+
+h1{
+    font-size:3rem;
+    font-weight:800;
+}
+
+h2{
+    margin-bottom:25px;
+    font-size:2rem;
+}
+
+.year{
+    color:#888;
+}
+
+.controls{
+    display:flex;
+    gap:10px;
+}
+
+button{
+    border:none;
+    border-radius:8px;
+    padding:10px 16px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+#exportBtn{
+    background:#d9d9d9;
+}
+
+#resetBtn{
+    background:#111;
+    color:white;
+}
+
+.section{
+    margin-bottom:45px;
+}
+
+.section-title{
+    text-transform:uppercase;
+    letter-spacing:2px;
+    font-size:14px;
+    font-weight:800;
+    color:#666;
+    margin-bottom:12px;
+}
+
+.goal{
+    margin-bottom:12px;
+}
+
+.goal-name{
+    font-size:18px;
+    margin-bottom:10px;
+}
+
+.boxes{
+    display:grid;
+    grid-template-columns:repeat(12,40px);
+    gap:4px;
+}
+
+.box{
+    width:40px;
+    height:40px;
+    background:#ececec;
+    border:1px solid #d6d6d6;
+    border-radius:4px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    cursor:pointer;
+
+    font-size:14px;
+    font-weight:600;
+
+    color:#c4c4c4;
+
+    user-select:none;
+}
+
+.box.success{
+    background:#22c55e;
+    border-color:#22c55e;
+    color:white;
+}
+
+.box.fail{
+    background:#ef4444;
+    border-color:#ef4444;
+    color:white;
+}
+
+.weekly-layout{
+    display:flex;
+    gap:15px;
+}
+
+.month-rail{
+    width:70px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.month-btn{
+    height:44px;
+    background:#ececec;
+    border-radius:8px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.month-btn.active{
+    background:#111;
+    color:white;
+}
+
+.weekly-content{
+    flex:1;
+}
+
+.weekly-goal{
+    margin-bottom:14px;
+}
+
+.weekly-row{
+    display:grid;
+    grid-template-columns:repeat(4,48px);
+    gap:6px;
+    margin-top:6px;
+}
+
+.week-box{
+    width:48px;
+    height:48px;
+
+    background:#ececec;
+    border:1px solid #d6d6d6;
+
+    border-radius:4px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    cursor:pointer;
+
+    font-size:12px;
+    font-weight:600;
+
+    color:#bdbdbd;
+}
+
+.week-box.success{
+    background:#22c55e;
+    border-color:#22c55e;
+    color:white;
+}
+
+.week-box.fail{
+    background:#ef4444;
+    border-color:#ef4444;
+    color:white;
+}
+
+.fin-row{
+    display:grid;
+    grid-template-columns:repeat(12,52px);
+    gap:8px;
+}
+
+.fin-input{
+    width:52px;
+    height:52px;
+    text-align:center;
+    border:1px solid #d6d6d6;
+    border-radius:4px;
+    font-size:11px;
+}
+
+.fin-total{
+    margin-top:10px;
+    width:340px;
+    background:white;
+    border:1px solid #d6d6d6;
+    padding:12px;
+    border-radius:8px;
+    font-weight:600;
+}
+
+.stats{
+    margin-top:40px;
+    font-size:15px;
+    color:#555;
+}
+
+@media(max-width:900px){
+
+    .goal{
+        overflow-x:auto;
+    }
+
+    .boxes,
+    .fin-row,
+    .weekly-row{
+        width:max-content;
+    }
+
+}
+.quest-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:white;
+    border:1px solid #d6d6d6;
+    border-radius:8px;
+    padding:10px;
+    margin-bottom:10px;
+}
+
+.quest-check{
+    width:22px;
+    height:22px;
+}
+
+.quest-input{
+    flex:1;
+    border:none;
+    outline:none;
+    font-size:16px;
+}
+
+.quest-handle{
+    cursor:grab;
+    font-size:20px;
+    color:#999;
+}
+
+.quest-completed{
+    opacity:.4;
+    background:#e5e5e5;
+}
+
+#addQuestBtn{
+    background:#111;
+    color:white;
+    margin:15px 0;
+}
+.goal-scroll{
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app-container">
+
+<div class="page active"
+     id="weeklyPage">
+
+<div class="container">
+
+<div class="header">
+
+<h1 id="weeklyTitle">
+    Weekly Goals
+    <span style="
+        color:#888;
+        font-weight:600;
+    ">
+        JAN
+    </span>
+</h1>
+
+
+<div class="controls">
+
+
+</div>
+
+</div>
+
+<div class="weekly-layout">
+
+<div class="month-rail"
+id="monthRail">
+</div>
+
+<div class="weekly-content">
+
+<h2 id="activeMonth">
+JAN
+</h2>
+
+<div id="weeklyGoals">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="page"
+     id="yearlyPage">
+
+<div class="container">
+
+<div class="header">
+
+<h1>
+My Goals
+<span class="year">
+2026
+</span>
+</h1>
+
+</div>
+
+<div id="yearlyGoals">
+</div>
+
+<div id="stats"
+class="stats">
+</div>
+
+</div>
+
+</div>
+
+<div class="page"
+     id="sideQuestsPage">
+
+<div class="container">
+
+<div class="header">
+<h1>Side Quests</h1>
+</div>
+
+<div id="activeQuests"></div>
+
+<button id="addQuestBtn">
++ Add Quest
+</button>
+
+<div id="completedQuests"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const MONTHS = [
+"JAN","FEB","MAR","APR",
+"MAY","JUN","JUL","AUG",
+"SEP","OCT","NOV","DEC"
+];
+
+const MONTH_LETTERS = [
+"J","F","M","A","M","J",
+"J","A","S","O","N","D"
+];
+
+const YEAR_STORAGE =
+"goalTracker2026";
+
+const WEEK_STORAGE =
+"goalTrackerWeekly";
+
+const FIN_STORAGE =
+"goalTrackerFinancial";
+
+const GOALS = [
+
+{
+title:"Career/Passion",
+weekly:true,
+items:[
+"Apply for 1 Christmas job per day",
+"Upload 1 video per month"
+]
+},
+
+{
+title:"Deen",
+weekly:true,
+items:[
+"Wake up for Fajr everyday",
+"Read the Full Quran Translation",
+"Build a well"
+]
+},
+
+{
+title:"Physical Health",
+weekly:true,
+items:[
+"Lift 3 times a week",
+"Run 1 time per week",
+"Drink 2 bottles of water a day"
+]
+},
+
+{
+title:"Social Health",
+weekly:true,
+items:[
+"Complete 3 CHOC lessons per week",
+"Learn storytelling",
+"Practice dance 3 times per week"
+]
+},
+
+{
+title:"Financial",
+weekly:false,
+items:[
+"Save up $3k per month"
+]
+}
+
+];
+
+let currentMonth = "JAN";
+
+let weeklyData =
+JSON.parse(
+    localStorage.getItem(
+        WEEK_STORAGE
+    )
+) || {};
+
+function loadMonthData(){
+
+    document
+    .querySelectorAll(
+        ".week-box"
+    )
+    .forEach(box=>{
+
+        const goal =
+        box.dataset.goal;
+
+        const week =
+        box.dataset.week;
+
+        const savedState =
+
+        weeklyData[
+            currentMonth
+        ]?.[
+            goal + "|" + week
+        ] || "blank";
+
+        box.classList.remove(
+            "success",
+            "fail"
+        );
+
+        box.dataset.state =
+        savedState;
+
+        if(savedState==="success"){
+
+            box.classList.add(
+                "success"
+            );
+
+            box.textContent =
+            "✓";
+
+        }
+        else if(savedState==="fail"){
+
+            box.classList.add(
+                "fail"
+            );
+
+            box.textContent =
+            "✕";
+
+        }
+        else{
+
+            box.textContent =
+            week;
+
+        }
+
+    });
+
+}
+
+function cycleBox(
+box,
+defaultText
+){
+
+const state =
+box.dataset.state || "blank";
+
+if(state==="blank"){
+
+box.dataset.state="success";
+
+box.classList.remove("fail");
+box.classList.add("success");
+
+box.textContent="✓";
+
+}
+else if(
+state==="success"
+){
+
+box.dataset.state="fail";
+
+box.classList.remove("success");
+box.classList.add("fail");
+
+box.textContent="✕";
+
+}
+else{
+
+box.dataset.state="blank";
+
+box.classList.remove(
+"success",
+"fail"
+);
+
+box.textContent=
+defaultText;
+
+}
+
+}
+
+MONTHS.forEach(month=>{
+
+const btn =
+document.createElement("div");
+
+btn.className =
+"month-btn";
+
+if(month==="JAN"){
+btn.classList.add("active");
+}
+
+btn.textContent =
+month;
+
+btn.onclick=()=>{
+
+    currentMonth =
+    month;
+
+    document
+    .querySelectorAll(
+        ".month-btn"
+    )
+    .forEach(x=>
+        x.classList.remove(
+            "active"
+        )
+    );
+
+    btn.classList.add(
+        "active"
+    );
+
+    document
+    .getElementById(
+        "activeMonth"
+    )
+    .textContent =
+    month;
+
+    document
+    .getElementById(
+        "weeklyTitle"
+    )
+    .innerHTML =
+    `Weekly Goals <span style="
+        color:#888;
+        font-weight:600;
+    ">${month}</span>`;
+
+    loadMonthData();
+
+};
+
+document
+.getElementById(
+"monthRail"
+)
+.appendChild(btn);
+
+});
+
+const weekly =
+document.getElementById(
+"weeklyGoals"
+);
+
+GOALS
+.filter(x=>x.weekly)
+.forEach(section=>{
+
+const title =
+document.createElement("div");
+
+title.className =
+"section-title";
+
+title.textContent =
+section.title;
+
+weekly.appendChild(title);
+
+section.items.forEach(goal=>{
+
+const wrapper =
+document.createElement("div");
+
+wrapper.className =
+"weekly-goal";
+
+wrapper.innerHTML=
+`<div class="goal-name">${goal}</div>`;
+
+const row =
+document.createElement("div");
+
+row.className =
+"weekly-row";
+
+["W1","W2","W3","W4"]
+.forEach(week=>{
+
+const box =
+document.createElement("div");
+
+box.className =
+"week-box";
+
+box.dataset.goal =
+goal;
+
+box.dataset.week =
+week;
+
+box.dataset.state =
+"blank";
+
+box.textContent =
+week;
+
+box.onclick=()=>{
+
+    cycleBox(
+        box,
+        week
+    );
+
+    if(
+        !weeklyData[
+            currentMonth
+        ]
+    ){
+
+        weeklyData[
+            currentMonth
+        ] = {};
+
+    }
+
+    weeklyData[
+        currentMonth
+    ][
+        goal + "|" + week
+    ] =
+    box.dataset.state;
+
+    localStorage.setItem(
+
+        WEEK_STORAGE,
+
+        JSON.stringify(
+            weeklyData
+        )
+
+    );
+
+};
+
+row.appendChild(box);
+
+});
+
+wrapper.appendChild(row);
+
+weekly.appendChild(
+wrapper
+);
+
+});
+
+});
+
+const yearly =
+document.getElementById(
+"yearlyGoals"
+);
+
+GOALS.forEach(section=>{
+
+const sec =
+document.createElement("div");
+
+sec.className =
+"section";
+
+sec.innerHTML=
+`<div class="section-title">
+${section.title}
+</div>`;
+
+section.items.forEach(goal=>{
+
+const goalDiv =
+document.createElement("div");
+
+goalDiv.className =
+"goal";
+
+goalDiv.innerHTML=
+`<div class="goal-name">
+${goal}
+</div>`;
+
+if(section.title==="Financial"){
+
+    const row =
+    document.createElement("div");
+
+    row.className =
+    "fin-row";
+
+    const inputs = [];
+
+    const savedFinancial =
+    JSON.parse(
+        localStorage.getItem(
+            FIN_STORAGE
+        )
+    ) || Array(12).fill("");
+
+    for(let i=0;i<12;i++){
+
+        const input =
+        document.createElement(
+            "input"
+        );
+
+        input.type =
+            "number";
+
+        input.className =
+            "fin-input";
+
+        input.placeholder =
+            MONTH_LETTERS[i];
+
+        input.value =
+            savedFinancial[i] || "";
+
+        row.appendChild(
+            input
+        );
+
+        inputs.push(
+            input
+        );
+
+    }
+
+const scrollWrap =
+document.createElement("div");
+
+scrollWrap.className =
+"goal-scroll";
+
+scrollWrap.appendChild(
+    row
+);
+
+goalDiv.appendChild(
+    scrollWrap
+);
+
+    const total =
+    document.createElement(
+        "div"
+    );
+
+    total.className =
+        "fin-total";
+
+    goalDiv.appendChild(
+        total
+    );
+
+    function updateFinancial(){
+
+        let sum = 0;
+
+        const values = [];
+
+        inputs.forEach(input=>{
+
+            const value =
+            Number(
+                input.value
+            ) || 0;
+
+            sum += value;
+
+            values.push(
+                input.value
+            );
+
+        });
+
+        localStorage.setItem(
+            FIN_STORAGE,
+            JSON.stringify(
+                values
+            )
+        );
+
+const percent =
+((sum / 60000) * 100)
+.toFixed(1);
+
+        total.innerHTML =
+        `
+        <div>
+            Total Saved:
+            $${sum.toLocaleString()}
+        </div>
+
+        <div style="
+            margin-top:6px;
+            color:#666;
+            font-size:14px;
+        ">
+${percent}% of
+$60,000 target
+        </div>
+        `;
+    }
+
+    inputs.forEach(input=>{
+
+        input.addEventListener(
+            "input",
+            updateFinancial
+        );
+
+    });
+
+    updateFinancial();
+
+}
+else{
+
+const boxes =
+document.createElement("div");
+
+boxes.className =
+"boxes";
+
+MONTH_LETTERS.forEach(
+letter=>{
+
+const box =
+document.createElement("div");
+
+box.className =
+"box";
+
+box.dataset.state =
+"blank";
+
+box.textContent =
+letter;
+
+box.onclick=()=>{
+
+cycleBox(
+box,
+letter
+);
+
+};
+
+boxes.appendChild(
+box
+);
+
+});
+
+const scrollWrap =
+document.createElement("div");
+
+scrollWrap.className =
+"goal-scroll";
+
+scrollWrap.appendChild(
+    boxes
+);
+
+goalDiv.appendChild(
+    scrollWrap
+);
+
+}
+
+sec.appendChild(goalDiv);
+
+});
+
+yearly.appendChild(sec);
+
+});
+
+let currentPage = 0;
+let startX = 0;
+
+function showPage(page){
+
+    currentPage = page;
+
+    document
+    .querySelectorAll(".page")
+    .forEach(pageEl=>{
+        pageEl.classList.remove("active");
+    });
+
+    if(page===0){
+        document
+        .getElementById("weeklyPage")
+        .classList.add("active");
+    }
+
+    if(page===1){
+        document
+        .getElementById("yearlyPage")
+        .classList.add("active");
+    }
+
+    if(page===2){
+        document
+        .getElementById("sideQuestsPage")
+        .classList.add("active");
+    }
+
+}
+document.addEventListener(
+    "touchstart",
+    e=>{
+
+if(
+    e.target.closest(".boxes")
+    ||
+    e.target.closest(".fin-row")
+){
+    startX = null;
+    return;
+}
+
+        startX =
+        e.touches[0].clientX;
+
+    },
+    {passive:true}
+);
+
+document.addEventListener(
+    "touchend",
+    e=>{
+
+        if(startX === null){
+            return;
+        }
+
+        const endX =
+        e.changedTouches[0].clientX;
+
+        const distance =
+        endX - startX;
+if(distance < -80){
+
+    if(currentPage < 2){
+        showPage(
+            currentPage + 1
+        );
+    }
+
+}
+
+if(distance > 80){
+
+    if(currentPage > 0){
+        showPage(
+            currentPage - 1
+        );
+    }
+
+}
+
+    },
+    {passive:true}
+);
+
+
+document.getElementById(
+"stats"
+).textContent =
+"Swipe between Weekly and Yearly pages";
+
+loadMonthData();
+const QUEST_STORAGE = "sideQuests";
+
+let draggedIndex = null;
+
+let quests =
+JSON.parse(
+    localStorage.getItem(
+        QUEST_STORAGE
+    )
+)
+||
+[
+    {text:"",completed:false},
+    {text:"",completed:false},
+    {text:"",completed:false}
+];
+
+function saveQuests(){
+
+    localStorage.setItem(
+        QUEST_STORAGE,
+        JSON.stringify(quests)
+    );
+
+}
+
+function renderQuests(){
+
+    const active =
+    document.getElementById(
+        "activeQuests"
+    );
+
+    const completed =
+    document.getElementById(
+        "completedQuests"
+    );
+
+    active.innerHTML = "";
+    completed.innerHTML = "";
+
+    quests.forEach((quest,index)=>{
+
+        const row =
+        document.createElement("div");
+
+        row.className =
+        "quest-row";
+row.dataset.index =
+index;
+
+if(!quest.completed){
+    row.draggable = true;
+}
+        if(quest.completed){
+            row.classList.add(
+                "quest-completed"
+            );
+        }
+
+        const check =
+        document.createElement("input");
+
+        check.type =
+        "checkbox";
+
+        check.className =
+        "quest-check";
+
+        check.checked =
+        quest.completed;
+
+        check.onchange = ()=>{
+
+            quest.completed =
+            check.checked;
+
+const activeQuests =
+quests.filter(
+    q=>!q.completed
+);
+
+const completedQuests =
+quests.filter(
+    q=>q.completed
+);
+
+quests =
+[
+    ...activeQuests,
+    ...completedQuests
+];
+
+            saveQuests();
+            renderQuests();
+
+        };
+
+        const input =
+        document.createElement("input");
+
+        input.type = "text";
+
+        input.className =
+        "quest-input";
+
+        input.value =
+        quest.text;
+
+        input.placeholder =
+        "Enter quest...";
+
+        input.oninput = ()=>{
+
+            quest.text =
+            input.value;
+
+            saveQuests();
+
+        };
+
+        const handle =
+        document.createElement("div");
+
+        handle.className =
+        "quest-handle";
+
+        handle.innerHTML =
+        "☰";
+
+        row.appendChild(check);
+        row.appendChild(input);
+        row.appendChild(handle);
+
+if(quest.completed){
+    completed.appendChild(row);
+}else{
+
+    row.addEventListener(
+        "dragstart",
+        ()=>{
+            draggedIndex =
+            Number(
+                row.dataset.index
+            );
+        }
+    );
+
+    row.addEventListener(
+        "dragover",
+        e=>{
+            e.preventDefault();
+        }
+    );
+
+    row.addEventListener(
+        "drop",
+        ()=>{
+
+            const targetIndex =
+            Number(
+                row.dataset.index
+            );
+
+            if(
+                draggedIndex ===
+                targetIndex
+            ){
+                return;
+            }
+
+            const movedQuest =
+            quests.splice(
+                draggedIndex,
+                1
+            )[0];
+
+            quests.splice(
+                targetIndex,
+                0,
+                movedQuest
+            );
+
+            saveQuests();
+            renderQuests();
+
+        }
+    );
+
+    active.appendChild(row);
+
+}
+
+    });
+
+}
+
+document
+.getElementById(
+    "addQuestBtn"
+)
+.onclick = ()=>{
+
+    const firstCompleted =
+    quests.findIndex(
+        q=>q.completed
+    );
+
+    if(firstCompleted===-1){
+
+        quests.push({
+            text:"",
+            completed:false
+        });
+
+    }else{
+
+        quests.splice(
+            firstCompleted,
+            0,
+            {
+                text:"",
+                completed:false
+            }
+        );
+
+    }
+
+    saveQuests();
+    renderQuests();
+
+};
+
+renderQuests();
+</script>
+
+</body>
+</html>
